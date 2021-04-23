@@ -9,8 +9,8 @@
       <a *ngIf="!(user|async)?.uid" routerLink="/signup">Sign Up</a>
     </span>
     <span>
-      <span> Hello! </span>
-      <!-- <span id="userEmail" *ngIf="(user|async)?.uid">Hello, {{userEmail}}</span> -->
+      <!-- <span> Hello! </span> -->
+      <span id="userEmail" *ngIf="(user|async)?.uid">Hello, {{userEmail}}</span>
     </span>
     <span>
       <!-- <a href="#" (click)="logout()">Logout</a> -->

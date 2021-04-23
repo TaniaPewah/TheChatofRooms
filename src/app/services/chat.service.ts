@@ -32,7 +32,10 @@ export class ChatService {
     const user = await this.isLoggedIn()
     if (user) {
       this.user = user;
-      debugger;
+      // this.getUser().((a: { displayName: string; }) => {
+      //   this.userName = a.displayName;
+      // });
+
     } else {
      
     }
@@ -41,6 +44,21 @@ export class ChatService {
   getUsers() {
     const path = '/users';
     return this.firestore.collection(path);
+  }
+
+  getUser() {
+    const userId = this.user.uid;
+    const path = `/users/${userId}`;
+    return this.firestore.doc(path);
+    // const userRef = this.firestore.collection('users').doc(userId);
+    // const user = await userRef.get();
+    // if (!user) {
+    //   console.log('No such document!');
+    //   return {};
+    // } else {
+    //   console.log('User data:', user);
+    //   return user;
+    // }
   }
 
   isLoggedIn() {
@@ -52,11 +70,11 @@ export class ChatService {
     return this.chatMessages;
   }
 
-
   sendMessage(msg: string){
     const timestamp = this.getTimeStamp();
     const email = this.user.email!;
     this.chatMessages = this.firestore.collection(this.dbPath);
+    debugger;
     this.chatMessages.add({
       message: msg,
       timeSent: timestamp,

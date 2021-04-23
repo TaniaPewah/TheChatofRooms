@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { ChatService } from '../services/chat.service';
 import { Observable } from 'rxjs';
 import { User } from '../models/user.model';
 
@@ -10,19 +11,20 @@ import { User } from '../models/user.model';
 })
 export class NavbarComponent implements OnInit {
 
-  user!: Observable<User>;
+  user!: Observable<firebase.default.User>;
   userEmail: string = '';
 
   constructor(private authService: AuthService) { }
 
   ngOnInit() {
     console.log("hereeeee");
-    // this.user = this.authService.getUser();
-    // this.user.subscribe(user => {
-    //   if (user) {
-    //     this.userEmail = user.email!;
-    //   }
-    // });
+    this.user = this.authService.getUser();
+    this.user.subscribe(user => {
+      if (user) {
+        debugger;
+        this.userEmail = user.email!;
+      }
+    });
   }
 
   logout() {

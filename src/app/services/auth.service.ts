@@ -10,13 +10,16 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  user$: Observable<User> = new Observable();
+  user$: Observable<firebase.default.User> = new Observable();
+  user : Observable<firebase.default.User> = new Observable();
   private authState: any;
   public userData: any;
 
   constructor(public afs: AngularFirestore,   // Inject Firestore service
               public afAuth: AngularFireAuth, // Inject Firebase auth service
-              public router: Router,  ) { }
+              public router: Router,  ) {
+
+               }
 
   get currentUserID(): string{
     return this.authState !== null ? this.authState.uid : '';
@@ -44,6 +47,7 @@ export class AuthService {
   login(email: string, password: string){
     return this.afAuth.signInWithEmailAndPassword(email, password)
       .then((resolve =>{
+        this.authState = resolve.user;
         const status = 'online';
         this.setUserStatus(status);
         this.router.navigate(['chat']);
@@ -59,6 +63,9 @@ export class AuthService {
       displayName: displayName,
       status : status
     }
+
+    userRef.set(this.userData)
+        .catch(error => console.log(error));
 
   }
 
