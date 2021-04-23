@@ -17,16 +17,12 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     console.log("hereeeee");
-    debugger;
-    this.user = this.authService.getUser();
-   
-    this.user.subscribe(user => {
-      debugger;
-      if (user) {
-        this.userEmail = user.email!;
-        debugger;
-      }
-    });
+    // this.user = this.authService.getUser();
+    // this.user.subscribe(user => {
+    //   if (user) {
+    //     this.userEmail = user.email!;
+    //   }
+    // });
   }
 
   logout() {

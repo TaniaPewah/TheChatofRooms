@@ -25,20 +25,23 @@ export class ChatService {
 
     this.chatMessages = firestore.collection(this.dbPath);
     this.getLoggedInUser();
-    
+
   }
 
   async getLoggedInUser() {
     const user = await this.isLoggedIn()
     if (user) {
       this.user = user;
-      this.userName = user.email!;
-      console.log("name: " + this.userName);
-
+      debugger;
     } else {
      
-   }
- }
+    }
+  }
+
+  getUsers() {
+    const path = '/users';
+    return this.firestore.collection(path);
+  }
 
   isLoggedIn() {
     return this.afAuth.authState.pipe(first()).toPromise();

@@ -34,7 +34,7 @@ export class AuthService {
         up and returns promise */
         this.authState = result.user;
         const status = 'online';
-        this.setUserData(result.user, displayName);
+        this.setUserData(result.user, displayName, status);
       }).catch((error) => {
         window.alert(error.message)
       })
@@ -51,26 +51,27 @@ export class AuthService {
   }
 
 
-  setUserData( user:any, displayName: string ){
+  setUserData( user:any, displayName: string, status: string ){
     const path = `users/${this.currentUserID}`;
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(path);
     this.userData = {
-      uid: this.currentUserID,
       email: user.email,
-      displayName: displayName
+      displayName: displayName,
+      status : status
     }
-
-    return userRef.set(this.userData,{
-      merge: true
-    }). catch(error => console.log(error));
 
   }
 
   setUserStatus(status:string){
     const path = `users/${this.currentUserID}`;
+    const userRef: AngularFirestoreDocument<any> = this.afs.doc(path);
     const data = {
       status: status
     }
+
+    return userRef.set(data,{
+      merge: true
+    }). catch(error => console.log(error));
   }
 
   logout(){

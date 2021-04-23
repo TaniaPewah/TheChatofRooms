@@ -13,8 +13,8 @@
       <!-- <span id="userEmail" *ngIf="(user|async)?.uid">Hello, {{userEmail}}</span> -->
     </span>
     <span>
-      <a href="#" (click)="logout()">Logout</a>
-      <!-- <a *ngIf="(user|async)?.uid" href="#" (click)="logout()">Logout</a> -->
+      <!-- <a href="#" (click)="logout()">Logout</a> -->
+      <a *ngIf="(user|async)?.uid" href="#" (click)="logout()">Logout</a>
     </span>
   </div>
 </div>
