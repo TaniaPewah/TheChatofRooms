@@ -14,7 +14,7 @@ export class ChatService {
 
   private dbPath = '/chat-messages';
   user!: firebase.default.User;
-
+  users: AngularFirestoreCollection<User>
   chatMessages: AngularFirestoreCollection<ChatMessage>;
   chatMessage: ChatMessage= {};
   userName: string ='';
@@ -24,6 +24,7 @@ export class ChatService {
                private afAuth: AngularFireAuth) { 
 
     this.chatMessages = firestore.collection(this.dbPath);
+    this.users = this.firestore.collection('/users');
     this.getLoggedInUser();
 
   }
@@ -42,8 +43,8 @@ export class ChatService {
   }
 
   getUsers() {
-    const path = '/users';
-    return this.firestore.collection(path);
+    console.log("calling get users");
+    return this.users;
   }
 
   getUser() {
