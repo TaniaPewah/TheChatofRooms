@@ -1,32 +1,32 @@
 import { Injectable } from '@angular/core';
-import { User } from '../models/user.model';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from "@angular/router";
 import '@firebase/auth';
 import { Observable, of } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  user$: Observable<firebase.default.User> = new Observable();
-  user : Observable<firebase.default.User> = new Observable();
-  private authState: any;
-  public userData: any;
+
+  userData: any;
+  private user:any ={};
+  private authState: any={};
 
   constructor(public afs: AngularFirestore,   // Inject Firestore service
               public afAuth: AngularFireAuth, // Inject Firebase auth service
               public router: Router,  ) {
+                this.user = afAuth.authState;
+            }
 
-               }
-
-  get currentUserID(): string{
-    return this.authState !== null ? this.authState.uid : '';
+  currentUserID(): string{
+    return this.authState !== null ? this.authState.user.uid : '';
   }
 
-  getUser(){
-    return this.user$;
+  authUser() {
+    return this.user;
   }
 
   // Sign up with email/password
@@ -43,34 +43,30 @@ export class AuthService {
       })
   }
 
-
   login(email: string, password: string){
     return this.afAuth.signInWithEmailAndPassword(email, password)
-      .then((resolve =>{
-        this.authState = resolve.user;
+      .then((user =>{
+        this.authState = user;
         const status = 'online';
         this.setUserStatus(status);
         this.router.navigate(['chat']);
       }))
   }
 
-
   setUserData( user:any, displayName: string, status: string ){
-    const path = `users/${this.currentUserID}`;
+    const path = `users/${this.user.uid}`;
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(path);
     this.userData = {
       email: user.email,
       displayName: displayName,
       status : status
     }
-
     userRef.set(this.userData)
         .catch(error => console.log(error));
-
   }
 
   setUserStatus(status:string){
-    const path = `users/${this.currentUserID}`;
+    const path = `users/${this.currentUserID()}`;
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(path);
     const data = {
       status: status

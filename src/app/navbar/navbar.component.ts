@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { ChatService } from '../services/chat.service';
 import { Observable } from 'rxjs';
-import { User } from '../models/user.model';
+
 
 @Component({
   selector: 'app-navbar',
@@ -18,10 +18,9 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit() {
     console.log("hereeeee");
-    this.user = this.authService.getUser();
-    this.user.subscribe(user => {
+    this.user = this.authService.authUser();
+    this.user.subscribe((user) => {
       if (user) {
-        debugger;
         this.userEmail = user.email!;
       }
     });
@@ -32,7 +31,7 @@ export class NavbarComponent implements OnInit {
   }
 
   login(){
-    console.log("trying to login");
+   
   }
 
 }
