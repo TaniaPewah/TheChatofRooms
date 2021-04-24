@@ -8,8 +8,9 @@
 #logo{
     display: inline-block;
     /* background: url('../../assets/img/logo.png') no-repeat; */
-    background: green;
+    background: #78647f;
     background-size: cover;
+    border-radius: 10px;
     margin: 12px 10px 12px 32px;
     width: 60px;
     height: 60px;
