@@ -1,9 +1,9 @@
 import { Component, OnInit, OnChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { ChatService } from '../services/chat.service';
-import { Observable } from 'rxjs';
 import { ChatMessage } from '../models/chat-message.model';
-import { AngularFirestoreCollection } from '@angular/fire/firestore';
-import { map } from 'rxjs/operators';
+import { AngularFireAuth } from '@angular/fire/auth';
+
 
 @Component({
   selector: 'app-room-feed',
@@ -13,26 +13,35 @@ import { map } from 'rxjs/operators';
 export class RoomFeedComponent implements OnInit {
 
   feed: ChatMessage[];
-  constructor(private chatService: ChatService) { 
+  user : any = {};
+  constructor(private chatService: ChatService,  
+    private afAuth: AngularFireAuth,
+    private router: Router) { 
     this.feed = [];
+    this.afAuth.onAuthStateChanged(auth => {
+      if (auth !== undefined && auth !== null) {
+        this.user = auth;
+      } else {
+        this.router.navigate(['login']);
+      }
+    });
   }
 
   ngOnInit() {
     console.log("feed initializing..");
+    
     this.retrieveMessages();
   }
 
   retrieveMessages(){
 
-    this.chatService.getMessages().snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-        )
-      )
-    ).subscribe(data => {
-      this.feed = data;
-    });
+    if (this.user) {
+      this.chatService.getMessages().subscribe(messages => this.feed = messages);
+    }
+  }
+
+  ngOnChanges() {
+    this.retrieveMessages();
   }
 
 }

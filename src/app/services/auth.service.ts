@@ -32,12 +32,12 @@ export class AuthService {
   // Sign up with email/password
   signUp(email:string, password:string, displayName:string) {
     return this.afAuth.createUserWithEmailAndPassword(email, password)
-      .then((result) => {
+      .then((user) => {
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
-        this.authState = result.user;
+        this.authState = user;
         const status = 'online';
-        this.setUserData(result.user, displayName, status);
+        this.setUserData(email, displayName, status);
       }).catch((error) => {
         window.alert(error.message)
       })
@@ -53,11 +53,11 @@ export class AuthService {
       }))
   }
 
-  setUserData( user:any, displayName: string, status: string ){
-    const path = `users/${this.user.uid}`;
+  setUserData( email:string, displayName: string, status: string ){
+    const path = `users/${this.currentUserID()}`;
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(path);
     this.userData = {
-      email: user.email,
+      email: email,
       displayName: displayName,
       status : status
     }

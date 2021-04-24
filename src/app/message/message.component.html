@@ -4,7 +4,7 @@
             {{ userName }} 
         </span>
         <span class="timestamp">
-            {{ timeStamp }}
+            {{ timeStamp.seconds * 1000 | date:'medium' }}
         </span>
     </div>
     <div class="messageContent"> {{ messageContent }} </div>

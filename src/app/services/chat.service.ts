@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { AngularFireAuth } from "@angular/fire/auth";
 import { first } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { ChatMessage } from '../models/chat-message.model';
 import { User } from '../models/user.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,18 +14,33 @@ export class ChatService {
 
   private dbPath = '/chat-messages';
   user!: firebase.default.User;
-  users: AngularFirestoreCollection<User>
-  chatMessages: AngularFirestoreCollection<ChatMessage>;
+  users: AngularFirestoreCollection<User>;
+  chatCollection!: AngularFirestoreCollection<ChatMessage>;
+  chatMessages!: Observable<ChatMessage[]>;
   chatMessage: ChatMessage= {};
   userName: string ='';
   email: string ='';
+  now!: Date;
 
   constructor( private firestore: AngularFirestore,
-               private afAuth: AngularFireAuth) { 
+               private afAuth: AngularFireAuth,
+               private router: Router) { 
 
-    this.chatMessages = firestore.collection(this.dbPath);
+    this.afAuth.onAuthStateChanged(auth => {
+      if (auth !== undefined && auth !== null) {
+        this.user = auth;
+
+        this.chatCollection = this.firestore.collection(this.dbPath, ref => ref.orderBy('timeSent', 'asc'));
+        this.chatMessages = this.chatCollection.valueChanges();
+
+        this.getLoggedInUser();
+      } else {
+        this.router.navigate(['login']);
+      }
+    });
+    
     this.users = this.firestore.collection('/users');
-    this.getLoggedInUser();
+   
 
   }
 
@@ -64,24 +81,15 @@ export class ChatService {
   sendMessage(msg: string){
     const timestamp = this.getTimeStamp();
     const email = this.user.email!;
-    this.chatMessages = this.firestore.collection(this.dbPath);
-    this.chatMessages.add({
+    this.chatCollection.add({
       message: msg,
       timeSent: timestamp,
       userName: this.userName,
-      email: email 
+      email: email
     });
   }
 
   getTimeStamp() {
-    const now = new Date();
-    const date = now.getUTCFullYear() + '/' +
-                 (now.getUTCMonth() + 1) + '/' +
-                 now.getUTCDate();
-    const time = now.getUTCHours() + ':' +
-                 now.getUTCMinutes() + ':' +
-                 now.getUTCSeconds();
-
-    return (date + ' ' + time);
+    return this.now = new Date();
   }
 }
