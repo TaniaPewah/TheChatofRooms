@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/auth";
-import {firebase} from '@firebase/app';
-import { Observable, of } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { ChatMessage } from '../models/chat-message.model';
@@ -33,12 +31,13 @@ export class ChatService {
     const user = await this.isLoggedIn()
     if (user) {
       this.user = user;
-      // this.getUser().((a: { displayName: string; }) => {
-      //   this.userName = a.displayName;
-      // });
+      this.getUser().subscribe(( data: any) => {
+        this.userName =data.exists ? data.data().displayName : undefined;
+        console.log(this.userName);
+      });
 
     } else {
-     
+     console.log("error getting logged-in user from firestore");
     }
   }
 
@@ -50,16 +49,7 @@ export class ChatService {
   getUser() {
     const userId = this.user.uid;
     const path = `/users/${userId}`;
-    return this.firestore.doc(path);
-    // const userRef = this.firestore.collection('users').doc(userId);
-    // const user = await userRef.get();
-    // if (!user) {
-    //   console.log('No such document!');
-    //   return {};
-    // } else {
-    //   console.log('User data:', user);
-    //   return user;
-    // }
+    return this.firestore.doc(path).get();
   }
 
   isLoggedIn() {
@@ -75,7 +65,6 @@ export class ChatService {
     const timestamp = this.getTimeStamp();
     const email = this.user.email!;
     this.chatMessages = this.firestore.collection(this.dbPath);
-    debugger;
     this.chatMessages.add({
       message: msg,
       timeSent: timestamp,

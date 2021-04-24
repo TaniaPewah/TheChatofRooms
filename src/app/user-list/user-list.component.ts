@@ -12,14 +12,19 @@ export class UserListComponent {
   users: User[] = [];
 
   constructor(chatService: ChatService) {
-    chatService.getUsers().snapshotChanges().pipe(
-      map(changes =>
-        changes.map(c =>
-          ({ id: c.payload.doc.id, ...c.payload.doc.data() })
-        )
-      )
-    ).subscribe(data => {
-      this.users = data;
+    // chatService.getUsers().snapshotChanges().pipe(
+    //   map(changes =>
+    //     changes.map(c =>
+    //       ({ id: c.payload.doc.id, ...c.payload.doc.data() })
+    //     )
+    //   )
+    // ).subscribe(data => {
+    //   this.users = data;
+    // });
+
+    chatService.getUsers().valueChanges().subscribe( users =>{
+      this.users = users;
     });
+
   }
 }
