@@ -79,6 +79,7 @@ export class AuthService {
 
   logout(){
     this.afAuth.signOut();
+    this.setUserStatus('offline');
     this.router.navigate(['login']);
   }
 }
