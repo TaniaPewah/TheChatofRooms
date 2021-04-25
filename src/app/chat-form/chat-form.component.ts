@@ -21,5 +21,8 @@ export class ChatFormComponent implements OnInit {
     if (event.keyCode === 13){
       this.send();
     }
+    else if (event.charCode){
+        this.chat.startTyping();
+    }
   }
 }

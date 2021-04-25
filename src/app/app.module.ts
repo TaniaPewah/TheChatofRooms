@@ -10,8 +10,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatFormComponent } from './chat-form/chat-form.component';
 import { ChatroomGeneralComponent } from './chatroom-general/chatroom-general.component';
-import { ChatroomProfessionalComponent } from './chatroom-professional/chatroom-professional.component';
-import { ChatroomMasteryComponent } from './chatroom-mastery/chatroom-mastery.component';
 import { RoomFeedComponent } from './room-feed/room-feed.component';
 import { MessageComponent } from './message/message.component';
 import { LoginFormComponent } from './login-form/login-form.component';
@@ -32,8 +30,6 @@ import { environment } from '../environments/environment';
     AppComponent,
     ChatFormComponent,
     ChatroomGeneralComponent,
-    ChatroomProfessionalComponent,
-    ChatroomMasteryComponent,
     RoomFeedComponent,
     MessageComponent,
     LoginFormComponent,

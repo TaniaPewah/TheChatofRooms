@@ -92,4 +92,12 @@ export class ChatService {
   getTimeStamp() {
     return this.now = new Date();
   }
+
+  startTyping(){
+    console.log('typing');
+  }
+
+  endTyping(){
+    console.log('not typing');
+  }
 }
